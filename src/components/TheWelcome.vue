@@ -126,7 +126,7 @@ const tabs = [
 
 .content-section h2 {
   margin-bottom: 10px;
-  color: var(--color-heading);
+  color: var(--color-text);
 }
 
 .content-section p {
@@ -156,15 +156,17 @@ const tabs = [
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: var(--color-background-soft);
+  background: transparent;
+  border: none;
   border-radius: 4px;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .demo-symbols span:hover,
 .demo-emojis span:hover {
   transform: scale(1.1);
-  background: var(--color-background-mute);
+  background: var(--color-background-soft);
 }
 
 .view-more {

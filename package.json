@@ -28,6 +28,7 @@
     "pinia": "^3.0.1",
     "unicode-blocks": "^2.0.4",
     "unicode-emoji-json": "^0.8.0",
+    "unicode-properties": "^1.4.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },

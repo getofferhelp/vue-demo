@@ -159,10 +159,14 @@ nav a:first-of-type {
   z-index: 1000;
 }
 
-.global-controls {
+.global-controls > div {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 8px;
+  background: var(--color-background-soft);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .language-btn {

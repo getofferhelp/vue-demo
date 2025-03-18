@@ -30,15 +30,4 @@ h1 {
     text-align: left;
   }
 }
-
-/* 添加链接样式 */
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-.green:hover {
-  background-color: hsla(160, 100%, 37%, 0.2);
-}
 </style>

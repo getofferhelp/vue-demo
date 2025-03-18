@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import WelcomeItem from './WelcomeItem.vue'
 import BaseIcon from './BaseIcon.vue'
 
 const activeTab = ref('icons')
+
+// 定义图标类型
+type IconType = 'fas' | 'far' | 'fab'
+type IconSize = 'xs' | 'sm' | 'lg' | '2x' | '3x' | '4x' | '5x'
+
+interface IconDemo {
+  name: string
+  type: IconType
+  size?: IconSize
+}
 
 const tabs = [
   {
@@ -11,10 +20,10 @@ const tabs = [
     name: 'Font Awesome',
     description: '强大的矢量图标库，包含品牌图标、实底和轮廓样式等',
     demo: [
-      { name: 'user', type: 'fas' },
-      { name: 'heart', type: 'far' },
-      { name: 'github', type: 'fab' },
-    ],
+      { name: 'user', type: 'fas' as IconType },
+      { name: 'heart', type: 'far' as IconType },
+      { name: 'github', type: 'fab' as IconType },
+    ] as IconDemo[],
   },
   {
     id: 'unicode',
@@ -77,17 +86,6 @@ const tabs = [
       <router-link to="/unicode-emoji" class="view-more">查看所有表情 →</router-link>
     </div>
   </div>
-
-  <WelcomeItem>
-    <template #icon>
-      <BaseIcon name="info-circle" type="fas" size="2x" />
-    </template>
-    <template #heading>基础使用</template>
-    <div class="demo-section">
-      <BaseIcon name="user" />
-      <code>&lt;BaseIcon name="user" /&gt;</code>
-    </div>
-  </WelcomeItem>
 </template>
 
 <style scoped>

@@ -1,6 +1,5 @@
 import emojiData from '@emoji-mart/data'
 import unicodeEmojiJson from 'unicode-emoji-json'
-import unicodeProperties from 'unicode-properties'
 
 // 先添加调试日志查看实际数据结构
 console.log('Raw emoji data structure:', emojiData)
@@ -139,8 +138,22 @@ export const emojiIcons: EmojiIcon[] = (() => {
   return processedEmojis
 })()
 
-// Unicode 相关代码
-export const unicodeBlocks = [
+// 定义 Unicode 相关的类型
+interface UnicodeBlock {
+  name: string
+  start: number
+  end: number
+}
+
+interface UnicodeIcon {
+  name: string
+  icon: string
+  category: string
+  codePoint: number
+}
+
+// Unicode 字符块定义
+export const unicodeBlocks: UnicodeBlock[] = [
   {
     name: 'Basic Latin (Printable)',
     start: 0x0020,
@@ -183,15 +196,8 @@ export const unicodeBlocks = [
   },
 ]
 
-interface UnicodeIcon {
-  name: string
-  icon: string
-  category: string
-  codePoint: number
-}
-
 const createUnicodeRange = (start: number, end: number, category: string): UnicodeIcon[] => {
-  const chars = []
+  const chars: UnicodeIcon[] = []
   for (let i = start; i <= end; i++) {
     try {
       const char = String.fromCodePoint(i)
@@ -209,17 +215,17 @@ const createUnicodeRange = (start: number, end: number, category: string): Unico
 }
 
 // 获取指定 Unicode 块的字符
-export const getUnicodeIcons = (blockName?: string) => {
+export const getUnicodeIcons = (blockName?: string): UnicodeIcon[] => {
   const block = blockName ? unicodeBlocks.find((b) => b.name === blockName) : unicodeBlocks[0]
   if (!block) return []
   return createUnicodeRange(block.start, block.end, block.name)
 }
 
 // Unicode 分类列表
-export const unicodeCategories = unicodeBlocks.map((block) => block.name)
+export const unicodeCategories: string[] = unicodeBlocks.map((block) => block.name)
 
 // 获取分类中的字符数量
-export const getUnicodeCategoryCount = (category: string) => {
+export const getUnicodeCategoryCount = (category: string): number => {
   const block = unicodeBlocks.find((b) => b.name === category)
   if (!block) return 0
   return block.end - block.start + 1

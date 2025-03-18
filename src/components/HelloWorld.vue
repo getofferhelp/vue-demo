@@ -2,12 +2,6 @@
 defineProps<{
   msg: string
 }>()
-
-const links = [
-  { path: '/icons', name: 'Font Awesome' },
-  { path: '/unicode', name: 'Unicode 字符' },
-  { path: '/unicode-emoji', name: 'Unicode Emoji' },
-]
 </script>
 
 <template>
@@ -15,11 +9,6 @@ const links = [
     <h1>
       <router-link to="/" class="green">{{ msg }}</router-link>
     </h1>
-    <nav>
-      <router-link v-for="link in links" :key="link.path" :to="link.path">
-        {{ link.name }}
-      </router-link>
-    </nav>
   </div>
 </template>
 
@@ -49,28 +38,5 @@ h3 {
   .greetings h3 {
     text-align: left;
   }
-}
-
-nav {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-nav a {
-  color: var(--color-text);
-  text-decoration: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-nav a:hover {
-  background: var(--color-background-soft);
-}
-
-nav a.router-link-active {
-  color: var(--color-primary);
-  font-weight: bold;
 }
 </style>

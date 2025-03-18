@@ -23,19 +23,22 @@ const tabs = [
       { name: 'user', type: 'fas' as IconType },
       { name: 'heart', type: 'far' as IconType },
       { name: 'github', type: 'fab' as IconType },
+      { name: 'star', type: 'far' as IconType },
+      { name: 'code', type: 'fas' as IconType },
+      { name: 'twitter', type: 'fab' as IconType },
     ] as IconDemo[],
   },
   {
     id: 'unicode',
     name: 'Unicode 字符',
     description: '包含基础拉丁字符、数学符号、几何图形等 Unicode 字符',
-    symbols: ['←', '→', '△', '▽', '♠', '♥', '♦', '♣'],
+    symbols: ['←', '→', '△', '▽', '♠', '♥', '♦', '♣', '✓', '✗', '☀', '☂'],
   },
   {
     id: 'unicode-emoji',
     name: 'Unicode Emoji',
     description: '完整的 Unicode 表情符号集合，包含表情、人物、自然等分类',
-    emojis: ['😊', '👋', '🌟', '🎉', '🎨', '🚀'],
+    emojis: ['😊', '👋', '🌟', '🎉', '🎨', '🚀', '🌈', '🎸', '🌺', '🍕', '🎮', '📱'],
   },
 ]
 </script>

@@ -117,8 +117,8 @@ export const mainCategories = ['unicode', 'emoji'] as const
 // Unicode 分类
 export const unicodeBlockCategories = unicodeBlocks.map((block) => block.name)
 
-// 添加调试日志
-const getIconsByCategory = (
+// 添加 export 关键字
+export const getIconsByCategory = (
   mainCategory: (typeof mainCategories)[number],
   subCategory?: string,
 ) => {
@@ -155,25 +155,21 @@ const createUnicodeRange = (start: number, end: number, category: string) => {
   for (let i = start; i <= end; i++) {
     try {
       const char = String.fromCodePoint(i)
-      const props = unicodeProperties.getProperties(i)
 
-      // 跳过控制字符和未分配的码点
-      // 注意：属性名称是 'gc' (General Category)
+      // 简化字符检查逻辑，先不使用 unicodeProperties
+      // 检查是否是可打印字符
       if (
-        props.gc === 'Cc' || // Control
-        props.gc === 'Cn' || // Unassigned
-        props.gc === 'Cf' // Format
+        (i >= 0x20 && i <= 0x7e) || // 基本拉丁字母表中的可打印字符
+        (i >= 0xa0 && i <= 0xff) || // Latin-1 补充中的可打印字符
+        i >= 0x2000 // 其他 Unicode 块
       ) {
-        continue
+        chars.push({
+          name: `U+${i.toString(16).toUpperCase().padStart(4, '0')}`,
+          icon: char,
+          category: category,
+          codePoint: i,
+        })
       }
-
-      chars.push({
-        name: `U+${i.toString(16).toUpperCase().padStart(4, '0')} ${props.name || ''}`,
-        icon: char,
-        category: category,
-        codePoint: i,
-        description: props.gc || '', // 使用 gc 而不是 General_Category
-      })
     } catch (e) {
       console.warn(`Error creating character at ${i}:`, e)
     }

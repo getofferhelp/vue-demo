@@ -6,7 +6,9 @@ defineProps<{
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
+    <h1>
+      <router-link to="/" class="green">{{ msg }}</router-link>
+    </h1>
   </div>
 </template>
 
@@ -16,6 +18,10 @@ h1 {
   font-size: 2.6rem;
   position: relative;
   top: -10px;
+}
+
+a {
+  display: inline;
 }
 
 h3 {

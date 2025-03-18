@@ -1,27 +1,24 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import {
-  mainCategories,
-  unicodeBlockCategories,
-  emojiCategories,
-  getIconsByCategory,
-} from '../data/icons'
+import { unicodeCategories, getUnicodeIcons, getUnicodeCategoryCount } from '../data/icons'
 
 const searchTerm = ref('')
-const activeMainCategory = ref<(typeof mainCategories)[number]>('emoji')
-const activeSubCategory = ref('')
+const activeCategory = ref('')
 
-const categories = mainCategories
-
-const subCategories = computed(() => {
-  return activeMainCategory.value === 'emoji' ? emojiCategories : unicodeBlockCategories
+// 添加带数量的分类列表
+const categoriesWithCount = computed(() => {
+  return unicodeCategories.map((category) => ({
+    name: category,
+    count: getUnicodeCategoryCount(category),
+  }))
 })
 
 const filteredIcons = computed(() => {
-  let icons = getIconsByCategory(activeMainCategory.value, activeSubCategory.value)
+  let icons = getUnicodeIcons(activeCategory.value)
 
   if (searchTerm.value) {
-    icons = icons.filter((icon) => icon.name.toLowerCase().includes(searchTerm.value.toLowerCase()))
+    const searchLower = searchTerm.value.toLowerCase()
+    icons = icons.filter((icon) => icon.name.toLowerCase().includes(searchLower))
   }
 
   return icons
@@ -41,47 +38,30 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
         showToast.value = false
       }, 3000)
     })
-    .catch((err) => {
-      console.error('复制失败:', err)
-    })
-}
-
-const handleMainCategoryClick = (category: (typeof mainCategories)[number]) => {
-  activeMainCategory.value = category
-  activeSubCategory.value = ''
+    .catch((err) => console.error('复制失败:', err))
 }
 </script>
 
 <template>
   <div class="icon-showcase">
     <div class="search-box">
-      <input v-model="searchTerm" type="text" placeholder="搜索符号..." class="search-input" />
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="搜索 Unicode 字符..."
+        class="search-input"
+      />
     </div>
 
-    <!-- 主分类 -->
-    <div class="main-categories">
+    <div class="categories">
+      <button :class="{ active: activeCategory === '' }" @click="activeCategory = ''">全部</button>
       <button
-        v-for="category in categories"
-        :key="category"
-        :class="{ active: activeMainCategory === category }"
-        @click="handleMainCategoryClick(category)"
+        v-for="category in categoriesWithCount"
+        :key="category.name"
+        :class="{ active: activeCategory === category.name }"
+        @click="activeCategory = category.name"
       >
-        {{ category === 'emoji' ? 'Emoji' : 'Unicode' }}
-      </button>
-    </div>
-
-    <!-- 子分类 -->
-    <div class="sub-categories">
-      <button :class="{ active: activeSubCategory === '' }" @click="activeSubCategory = ''">
-        全部
-      </button>
-      <button
-        v-for="category in subCategories"
-        :key="category"
-        :class="{ active: activeSubCategory === category }"
-        @click="activeSubCategory = category"
-      >
-        {{ category }}
+        {{ category.name }} ({{ category.count }})
       </button>
     </div>
 
@@ -90,8 +70,8 @@ const handleMainCategoryClick = (category: (typeof mainCategories)[number]) => {
         <div class="icon-display">{{ icon.icon }}</div>
         <span class="icon-name">{{ icon.name }}</span>
         <div class="copy-buttons">
-          <button @click="copyIcon(icon, 'name')" title="复制图标名称">复制名称</button>
-          <button @click="copyIcon(icon, 'icon')" title="复制图标">复制图标</button>
+          <button @click="copyIcon(icon, 'name')" title="复制字符编码">复制编码</button>
+          <button @click="copyIcon(icon, 'icon')" title="复制字符">复制字符</button>
         </div>
       </div>
     </div>
@@ -201,24 +181,14 @@ const handleMainCategoryClick = (category: (typeof mainCategories)[number]) => {
   }
 }
 
-.main-categories {
-  margin-bottom: 16px;
-}
-
-.main-categories button {
-  padding: 8px 16px;
-  margin-right: 8px;
-  font-size: 14px;
-}
-
-.sub-categories {
+.categories {
   margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.sub-categories button {
+.categories button {
   font-size: 12px;
   padding: 4px 8px;
 }

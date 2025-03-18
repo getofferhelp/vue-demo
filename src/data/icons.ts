@@ -139,14 +139,48 @@ export const emojiIcons: EmojiIcon[] = (() => {
   return processedEmojis
 })()
 
-// 只保留 Unicode 相关的代码
+// Unicode 相关代码
 export const unicodeBlocks = [
   {
     name: 'Basic Latin (Printable)',
     start: 0x0020,
     end: 0x007f,
   },
-  // ... 其他 Unicode 块 ...
+  {
+    name: 'Latin-1 Supplement',
+    start: 0x00a0,
+    end: 0x00ff,
+  },
+  {
+    name: 'Currency Symbols',
+    start: 0x20a0,
+    end: 0x20cf,
+  },
+  {
+    name: 'Arrows',
+    start: 0x2190,
+    end: 0x21ff,
+  },
+  {
+    name: 'Mathematical Operators',
+    start: 0x2200,
+    end: 0x22ff,
+  },
+  {
+    name: 'Box Drawing',
+    start: 0x2500,
+    end: 0x257f,
+  },
+  {
+    name: 'Geometric Shapes',
+    start: 0x25a0,
+    end: 0x25ff,
+  },
+  {
+    name: 'Miscellaneous Symbols',
+    start: 0x2600,
+    end: 0x26ff,
+  },
 ]
 
 interface UnicodeIcon {
@@ -154,14 +188,6 @@ interface UnicodeIcon {
   icon: string
   category: string
   codePoint: number
-}
-
-export const getUnicodeIcons = (blockName?: string) => {
-  const block = blockName ? unicodeBlocks.find((b) => b.name === blockName) : unicodeBlocks[0]
-
-  if (!block) return []
-
-  return createUnicodeRange(block.start, block.end, block.name)
 }
 
 const createUnicodeRange = (start: number, end: number, category: string): UnicodeIcon[] => {
@@ -182,7 +208,22 @@ const createUnicodeRange = (start: number, end: number, category: string): Unico
   return chars
 }
 
+// 获取指定 Unicode 块的字符
+export const getUnicodeIcons = (blockName?: string) => {
+  const block = blockName ? unicodeBlocks.find((b) => b.name === blockName) : unicodeBlocks[0]
+  if (!block) return []
+  return createUnicodeRange(block.start, block.end, block.name)
+}
+
+// Unicode 分类列表
 export const unicodeCategories = unicodeBlocks.map((block) => block.name)
+
+// 获取分类中的字符数量
+export const getUnicodeCategoryCount = (category: string) => {
+  const block = unicodeBlocks.find((b) => b.name === category)
+  if (!block) return 0
+  return block.end - block.start + 1
+}
 
 // 定义主分类
 export const mainCategories = ['unicode', 'emoji'] as const

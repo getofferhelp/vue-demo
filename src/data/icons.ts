@@ -1,14 +1,33 @@
 import emojiData from '@emoji-mart/data'
 
-// 添加调试日志
-console.log('Emoji data:', emojiData)
+// 先添加调试日志查看实际数据结构
+console.log('Raw emoji data structure:', emojiData)
 
-// 确保数据格式正确
-export const emojiIcons = Object.values(emojiData.emojis).map((emoji: any) => ({
-  name: emoji.name,
-  icon: emoji.skins[0].native,
-  category: emoji.category,
-  keywords: emoji.keywords,
+// 定义 emoji-mart 数据的类型
+interface EmojiMartData {
+  emojis: {
+    [key: string]: EmojiRawData
+  }
+}
+
+interface EmojiRawData {
+  name: string
+  skins: Array<{
+    native: string
+  }>
+  keywords: string[]
+  category: string
+}
+
+// 使用类型断言处理 emojiData
+const typedEmojiData = emojiData as unknown as EmojiMartData
+
+// 修改数据处理方式，添加类型断言
+export const emojiIcons = Object.values(typedEmojiData.emojis || {}).map((emoji) => ({
+  name: (emoji as EmojiRawData).name,
+  icon: (emoji as EmojiRawData).skins[0].native,
+  category: (emoji as EmojiRawData).category,
+  keywords: (emoji as EmojiRawData).keywords || [],
 }))
 
 // 如果数据加载失败，提供一些默认的emoji

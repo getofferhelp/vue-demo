@@ -1,4 +1,5 @@
 import emojiData from '@emoji-mart/data'
+import unicodeEmojiJson from 'unicode-emoji-json'
 
 // 先添加调试日志查看实际数据结构
 console.log('Raw emoji data structure:', emojiData)
@@ -50,7 +51,7 @@ if (!emojiIcons.length) {
   emojiIcons.push(...defaultEmojis)
 }
 
-// 处理 Unicode 数据
+// 扩展 unicodeIcons
 export const unicodeIcons = [
   // 基础符号
   { name: 'bullet', icon: '•', category: 'basic' },
@@ -109,10 +110,31 @@ export const unicodeIcons = [
   { name: 'music-notes', icon: '♫', category: 'music' },
   { name: 'music-eighth', icon: '♩', category: 'music' },
   { name: 'music-beamed', icon: '♬', category: 'music' },
+
+  ...Object.entries(unicodeEmojiJson).map(([char, data]) => ({
+    name: data.name.toLowerCase(),
+    icon: char,
+    category: data.group,
+    keywords: [data.subgroup],
+  })),
+
+  // 原有的 Unicode 符号
+  // ... existing code ...
 ]
 
-// 获取所有 Unicode 符号分类
-export const unicodeCategories = Array.from(new Set(unicodeIcons.map((icon) => icon.category)))
+// 更新分类获取逻辑
+export const unicodeCategories = Array.from(
+  new Set([
+    'basic',
+    'geometric',
+    'arrows',
+    'math',
+    'marks',
+    'currency',
+    'music',
+    ...Object.values(unicodeEmojiJson).map((data) => data.group),
+  ]),
+)
 
 // 可选：按分类获取 emoji
 export const getEmojisByCategory = (category: string) => {

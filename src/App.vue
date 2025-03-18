@@ -6,7 +6,7 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
   <header>
     <div class="wrapper">
-      <HelloWorld msg="多语言·词典工具!" />
+      <HelloWorld msg="多种工具" />
     </div>
   </header>
 

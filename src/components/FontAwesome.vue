@@ -4,6 +4,7 @@ import BaseIcon from './BaseIcon.vue'
 import * as fas from '@fortawesome/free-solid-svg-icons'
 import * as far from '@fortawesome/free-regular-svg-icons'
 import * as fab from '@fortawesome/free-brands-svg-icons'
+import { useI18n } from 'vue-i18n'
 
 type IconType = 'fas' | 'far' | 'fab'
 
@@ -173,15 +174,17 @@ const filteredBrandIcons = computed(() =>
 const showToast = ref(false)
 const toastMessage = ref('')
 
+const { t } = useI18n()
+
 // 修改复制功能
 const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
   let textToCopy = ''
   if (copyType === 'name') {
     textToCopy = icon.name
-    toastMessage.value = '名称已复制！'
+    toastMessage.value = t('copy.success.name')
   } else {
     textToCopy = `<i class="${icon.type} fa-${icon.name}"></i>`
-    toastMessage.value = '代码已复制！'
+    toastMessage.value = t('copy.success.code')
   }
 
   navigator.clipboard
@@ -202,19 +205,24 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
   <div class="font-awesome-showcase">
     <!-- 添加搜索框 -->
     <div class="search-box">
-      <input v-model="searchTerm" type="text" placeholder="搜索图标..." class="search-input" />
+      <input
+        v-model="searchTerm"
+        type="text"
+        :placeholder="t('search.placeholder.fontawesome')"
+        class="search-input"
+      />
     </div>
 
     <!-- 标签页切换 -->
     <div class="tabs">
       <button :class="{ active: activeTab === 'solid' }" @click="activeTab = 'solid'">
-        实心图标 ({{ filteredSolidIcons.length }})
+        {{ t('tabs.fontawesome.solid') }} ({{ filteredSolidIcons.length }})
       </button>
       <button :class="{ active: activeTab === 'regular' }" @click="activeTab = 'regular'">
-        线框图标 ({{ filteredRegularIcons.length }})
+        {{ t('tabs.fontawesome.regular') }} ({{ filteredRegularIcons.length }})
       </button>
       <button :class="{ active: activeTab === 'brands' }" @click="activeTab = 'brands'">
-        品牌图标 ({{ filteredBrandIcons.length }})
+        {{ t('tabs.fontawesome.brands') }} ({{ filteredBrandIcons.length }})
       </button>
     </div>
 

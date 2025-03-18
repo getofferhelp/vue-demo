@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import BaseIcon from './BaseIcon.vue'
 
+const { t } = useI18n()
 const activeTab = ref('icons')
 
 // 定义图标类型
@@ -14,11 +16,11 @@ interface IconDemo {
   size?: IconSize
 }
 
-const tabs = [
+const tabs = computed(() => [
   {
     id: 'icons',
-    name: 'Font Awesome',
-    description: '强大的矢量图标库，包含品牌图标、实底和轮廓样式等',
+    name: t('welcome.fontawesome.title'),
+    description: t('welcome.fontawesome.description'),
     demo: [
       { name: 'user', type: 'fas' as IconType },
       { name: 'heart', type: 'far' as IconType },
@@ -30,17 +32,17 @@ const tabs = [
   },
   {
     id: 'unicode',
-    name: 'Unicode 字符',
-    description: '包含基础拉丁字符、数学符号、几何图形等 Unicode 字符',
+    name: t('welcome.unicode.title'),
+    description: t('welcome.unicode.description'),
     symbols: ['←', '→', '△', '▽', '♠', '♥', '♦', '♣', '✓', '✗', '☀', '☂'],
   },
   {
     id: 'unicode-emoji',
-    name: 'Unicode Emoji',
-    description: '完整的 Unicode 表情符号集合，包含表情、人物、自然等分类',
+    name: t('welcome.unicodeEmoji.title'),
+    description: t('welcome.unicodeEmoji.description'),
     emojis: ['😊', '👋', '🌟', '🎉', '🎨', '🚀', '🌈', '🎸', '🌺', '🍕', '🎮', '📱'],
   },
-]
+])
 </script>
 
 <template>
@@ -68,7 +70,7 @@ const tabs = [
           size="lg"
         />
       </div>
-      <router-link to="/icons" class="view-more">查看更多图标 →</router-link>
+      <router-link to="/icons" class="view-more">{{ t('welcome.viewMore') }}</router-link>
     </div>
 
     <div v-if="activeTab === 'unicode'" class="content-section">
@@ -77,7 +79,7 @@ const tabs = [
       <div class="demo-symbols">
         <span v-for="symbol in tabs[1].symbols" :key="symbol">{{ symbol }}</span>
       </div>
-      <router-link to="/unicode" class="view-more">浏览所有字符 →</router-link>
+      <router-link to="/unicode" class="view-more">{{ t('welcome.viewAllChars') }}</router-link>
     </div>
 
     <div v-if="activeTab === 'unicode-emoji'" class="content-section">
@@ -86,7 +88,9 @@ const tabs = [
       <div class="demo-emojis">
         <span v-for="emoji in tabs[2].emojis" :key="emoji">{{ emoji }}</span>
       </div>
-      <router-link to="/unicode-emoji" class="view-more">查看所有表情 →</router-link>
+      <router-link to="/unicode-emoji" class="view-more">{{
+        t('welcome.viewAllEmojis')
+      }}</router-link>
     </div>
   </div>
 </template>

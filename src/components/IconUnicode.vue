@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { unicodeCategories, getUnicodeIcons, getUnicodeCategoryCount } from '../data/icons'
 
+const { t } = useI18n()
 const searchTerm = ref('')
 const activeCategory = ref('')
 
@@ -32,13 +34,14 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
-      toastMessage.value = copyType === 'name' ? '名称已复制！' : '图标已复制！'
+      toastMessage.value =
+        copyType === 'name' ? t('copy.success.name') : t('copy.success.character')
       showToast.value = true
       setTimeout(() => {
         showToast.value = false
       }, 3000)
     })
-    .catch((err) => console.error('复制失败:', err))
+    .catch((err) => console.error(t('copy.failed'), err))
 }
 </script>
 
@@ -48,13 +51,15 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
       <input
         v-model="searchTerm"
         type="text"
-        placeholder="搜索 Unicode 字符..."
+        :placeholder="t('search.placeholder.unicode')"
         class="search-input"
       />
     </div>
 
     <div class="categories">
-      <button :class="{ active: activeCategory === '' }" @click="activeCategory = ''">全部</button>
+      <button :class="{ active: activeCategory === '' }" @click="activeCategory = ''">
+        {{ t('tabs.unicode') }}
+      </button>
       <button
         v-for="category in categoriesWithCount"
         :key="category.name"
@@ -70,8 +75,12 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
         <div class="icon-display">{{ icon.icon }}</div>
         <span class="icon-name">{{ icon.name }}</span>
         <div class="copy-buttons">
-          <button @click="copyIcon(icon, 'name')" title="复制字符编码">复制编码</button>
-          <button @click="copyIcon(icon, 'icon')" title="复制字符">复制字符</button>
+          <button @click="copyIcon(icon, 'name')" :title="t('copy.name')">
+            {{ t('copy.name') }}
+          </button>
+          <button @click="copyIcon(icon, 'icon')" :title="t('copy.character')">
+            {{ t('copy.character') }}
+          </button>
         </div>
       </div>
     </div>

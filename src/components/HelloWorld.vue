@@ -12,9 +12,9 @@ const isDark = inject('isDark') as Ref<boolean>
 const { locale } = useI18n()
 
 const languageLabels = {
-  zh: '🇨🇳',
-  en: '🇺🇸',
-  es: '🇪🇸',
+  zh: '中',
+  en: 'En',
+  es: 'Es',
 }
 
 const toggleLanguage = (lang: string) => {
@@ -58,7 +58,6 @@ const toggleLanguage = (lang: string) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 h1 {

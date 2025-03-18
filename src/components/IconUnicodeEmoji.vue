@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import {
   unicodeEmojiIcons,
   unicodeEmojiCategories,
   getUnicodeEmojisByCategory,
 } from '../data/unicodeEmojiIcons'
 
-const { t } = useI18n()
 const searchTerm = ref('')
 const activeCategory = ref('')
 
@@ -36,14 +34,13 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
-      toastMessage.value =
-        copyType === 'name' ? t('copy.success.name') : t('copy.success.character')
+      toastMessage.value = copyType === 'name' ? '名称已复制！' : '图标已复制！'
       showToast.value = true
       setTimeout(() => {
         showToast.value = false
       }, 3000)
     })
-    .catch((err) => console.error(t('copy.failed'), err))
+    .catch((err) => console.error('复制失败:', err))
 }
 
 // 添加计算分类数量的函数
@@ -63,21 +60,21 @@ const categoriesWithCount = computed(() => {
 <template>
   <div class="icon-showcase">
     <div v-if="!unicodeEmojiIcons.length" class="debug-info">
-      {{ t('noResults') }}. Total icons: {{ unicodeEmojiIcons.length }}
+      No emojis loaded. Total icons: {{ unicodeEmojiIcons.length }}
     </div>
 
     <div class="search-box">
       <input
         v-model="searchTerm"
         type="text"
-        :placeholder="t('search.placeholder.emoji')"
+        placeholder="搜索 Unicode Emoji..."
         class="search-input"
       />
     </div>
 
     <div class="categories">
       <button :class="{ active: activeCategory === '' }" @click="activeCategory = ''">
-        {{ t('tabs.emoji') }} ({{ unicodeEmojiIcons.length }})
+        全部 ({{ unicodeEmojiIcons.length }})
       </button>
       <button
         v-for="category in categoriesWithCount"
@@ -94,12 +91,8 @@ const categoriesWithCount = computed(() => {
         <div class="icon-display">{{ emoji.icon }}</div>
         <span class="icon-name">{{ emoji.name }}</span>
         <div class="copy-buttons">
-          <button @click="copyIcon(emoji, 'name')" :title="t('copy.name')">
-            {{ t('copy.name') }}
-          </button>
-          <button @click="copyIcon(emoji, 'icon')" :title="t('copy.character')">
-            {{ t('copy.character') }}
-          </button>
+          <button @click="copyIcon(emoji, 'name')" title="复制图标名称">复制名称</button>
+          <button @click="copyIcon(emoji, 'icon')" title="复制图标">复制图标</button>
         </div>
       </div>
     </div>

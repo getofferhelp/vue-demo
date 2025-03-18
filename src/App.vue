@@ -2,7 +2,6 @@
 import { RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { ref, provide } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 // 暗色模式状态
 const isDark = ref(false)
@@ -16,12 +15,6 @@ const toggleDark = () => {
 // 提供给子组件使用
 provide('isDark', isDark)
 provide('toggleDark', toggleDark)
-
-const { locale } = useI18n()
-
-const toggleLanguage = () => {
-  locale.value = locale.value === 'zh' ? 'en' : 'zh'
-}
 </script>
 
 <template>
@@ -31,10 +24,6 @@ const toggleLanguage = () => {
         <HelloWorld msg="多种工具" />
       </div>
     </header>
-
-    <button @click="toggleLanguage">
-      {{ locale === 'zh' ? 'English' : '中文' }}
-    </button>
 
     <RouterView />
   </div>

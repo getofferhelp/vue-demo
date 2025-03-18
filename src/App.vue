@@ -165,6 +165,10 @@ nav a:first-of-type {
   gap: 12px;
 }
 
+.language-dropdown {
+  position: relative;
+}
+
 .language-btn {
   background: none;
   border: none;
@@ -173,18 +177,23 @@ nav a:first-of-type {
   font-size: 1.2rem;
   color: var(--color-text);
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  top: 100%;
-  right: 0;
+  top: calc(100% + 5px);
+  right: 50%;
+  transform: translateX(50%);
   background: var(--color-background);
   border: 1px solid var(--color-border);
-  border-radius: 4px;
-  padding: 4px;
-  min-width: 60px;
+  border-radius: 8px;
+  padding: 6px;
+  min-width: 40px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 .language-btn:hover .dropdown-content {
@@ -199,6 +208,36 @@ nav a:first-of-type {
   color: var(--color-text);
   cursor: pointer;
   text-align: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 1.2rem;
+}
+
+.dropdown-item:hover {
+  background: var(--color-background-soft);
+}
+
+/* 添加一个小三角形指示器 */
+.dropdown-content::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 50%;
+  transform: translateX(50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--color-border);
+}
+
+.dropdown-content::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 50%;
+  transform: translateX(50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid var(--color-background);
 }
 
 .theme-toggle {

@@ -7,43 +7,98 @@ console.log('Raw emoji data structure:', emojiData)
 
 // 定义 emoji-mart 数据的类型
 interface EmojiMartData {
-  emojis: {
-    [key: string]: EmojiRawData
-  }
-}
-
-interface EmojiRawData {
-  name: string
-  skins: Array<{
-    native: string
+  categories: Array<{
+    id: string
+    name: string
+    emojis: string[]
   }>
-  keywords: string[]
-  category: string
+  emojis: {
+    [key: string]: {
+      id: string
+      name: string
+      keywords: string[]
+      skins: Array<{ native: string }>
+      category: string
+    }
+  }
 }
 
 // 使用类型断言处理 emojiData
 const typedEmojiData = emojiData as unknown as EmojiMartData
 
-// 修改数据处理方式，添加类型断言
-export const emojiIcons = Object.values(typedEmojiData.emojis || {}).map((emoji) => ({
-  name: (emoji as EmojiRawData).name,
-  icon: (emoji as EmojiRawData).skins[0].native,
-  category: (emoji as EmojiRawData).category,
-  keywords: (emoji as EmojiRawData).keywords || [],
-}))
+// 确保分类名称一致性
+const normalizeCategory = (category: string | undefined): string => {
+  return (category || 'uncategorized').toLowerCase().trim()
+}
 
-// 如果数据加载失败，提供一些默认的emoji
+// 导出 emoji 相关内容
+export const emojiIcons = Object.entries(typedEmojiData.emojis || {}).map(([id, emoji]) => {
+  // 添加调试日志
+  if (!emoji.category) {
+    console.warn('Emoji without category:', emoji)
+  }
+
+  return {
+    id,
+    name: emoji.name || '',
+    icon: emoji.skins?.[0]?.native || '',
+    category: normalizeCategory(emoji.category),
+    keywords: emoji.keywords || [],
+  }
+})
+
+// 修复 emoji 分类，确保分类名称一致性
+export const emojiCategories = Array.from(new Set(emojiIcons.map((icon) => icon.category))).filter(
+  Boolean,
+) // 过滤掉空值
+
+// 添加调试日志
+console.log('Emoji data loaded:', {
+  totalEmojis: emojiIcons.length,
+  categories: emojiCategories,
+  categoryCounts: emojiCategories.map((cat) => ({
+    category: cat,
+    count: emojiIcons.filter((e) => e.category === cat).length,
+  })),
+})
+
+// 修改默认 emoji 的类型和数据
 const defaultEmojis = [
   {
+    id: 'smile',
     name: 'smile',
     icon: '😊',
     category: 'smileys',
     keywords: ['happy', 'joy'],
   },
-  { name: 'heart', icon: '❤️', category: 'symbols', keywords: ['love'] },
-  { name: 'star', icon: '⭐', category: 'symbols', keywords: ['favorite'] },
-  { name: 'sun', icon: '☀️', category: 'nature', keywords: ['weather'] },
-  { name: 'moon', icon: '🌙', category: 'nature', keywords: ['night'] },
+  {
+    id: 'heart',
+    name: 'heart',
+    icon: '❤️',
+    category: 'symbols',
+    keywords: ['love'],
+  },
+  {
+    id: 'star',
+    name: 'star',
+    icon: '⭐',
+    category: 'symbols',
+    keywords: ['favorite'],
+  },
+  {
+    id: 'sun',
+    name: 'sun',
+    icon: '☀️',
+    category: 'nature',
+    keywords: ['weather'],
+  },
+  {
+    id: 'moon',
+    name: 'moon',
+    icon: '🌙',
+    category: 'nature',
+    keywords: ['night'],
+  },
 ]
 
 // 如果 emojiIcons 为空，使用默认数据
@@ -181,11 +236,6 @@ const createUnicodeRange = (start: number, end: number, category: string) => {
 // 确保 unicodeBlocks 不为空
 console.log('Available Unicode blocks:', unicodeBlocks)
 console.log('Unicode categories:', unicodeBlockCategories)
-
-// Emoji 分类
-export const emojiCategories = Array.from(
-  new Set(Object.values(unicodeEmojiJson).map((data) => data.group)),
-)
 
 console.log('Processed emoji icons:', emojiIcons)
 console.log('Categories:', emojiCategories)

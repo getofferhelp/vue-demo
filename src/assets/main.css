@@ -33,4 +33,17 @@ a,
     padding: 0 2rem;
     width: 100%;
   }
+
+  .wrapper {
+    max-width: 1080px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .header-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: center;
+  }
 }

@@ -11,8 +11,14 @@ const toggleDark = inject('toggleDark') as () => void
 const isDark = inject('isDark') as Ref<boolean>
 const { locale } = useI18n()
 
-const toggleLanguage = () => {
-  locale.value = locale.value === 'zh' ? 'en' : 'zh'
+const languageLabels = {
+  zh: '中',
+  en: 'En',
+  es: 'Es',
+}
+
+const toggleLanguage = (lang: string) => {
+  locale.value = lang
 }
 </script>
 
@@ -25,12 +31,17 @@ const toggleLanguage = () => {
       <div class="controls">
         <div class="language-dropdown">
           <button class="language-btn">
-            {{ locale === 'zh' ? '中' : 'En' }}
+            {{ languageLabels[locale as keyof typeof languageLabels] }}
             <div class="dropdown-content">
-              <button v-if="locale === 'zh'" @click="toggleLanguage" class="dropdown-item">
+              <button v-if="locale !== 'zh'" @click="toggleLanguage('zh')" class="dropdown-item">
+                中
+              </button>
+              <button v-if="locale !== 'en'" @click="toggleLanguage('en')" class="dropdown-item">
                 En
               </button>
-              <button v-else @click="toggleLanguage" class="dropdown-item">中</button>
+              <button v-if="locale !== 'es'" @click="toggleLanguage('es')" class="dropdown-item">
+                Es
+              </button>
             </div>
           </button>
         </div>

@@ -1,14 +1,16 @@
 import { createI18n } from 'vue-i18n'
 import en from '../locales/en'
 import zh from '../locales/zh'
+import es from '../locales/es'
 
 const i18n = createI18n({
-  legacy: false, // 使用 Composition API 模式
-  locale: 'zh', // 默认语言
-  fallbackLocale: 'en', // 回退语言
+  legacy: false,
+  locale: 'zh',
+  fallbackLocale: 'en',
   messages: {
     en,
     zh,
+    es,
   },
 })
 

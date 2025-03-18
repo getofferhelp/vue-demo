@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import {
-  mainCategories,
-  unicodeBlockCategories,
-  emojiCategories,
-  getIconsByCategory,
-} from '../data/icons'
+import { unicodeIcons, unicodeCategories } from '../data/icons'
 
 const searchTerm = ref('')
-const activeMainCategory = ref<(typeof mainCategories)[number]>('emoji')
-const activeSubCategory = ref('')
-
-const categories = mainCategories
-
-const subCategories = computed(() => {
-  return activeMainCategory.value === 'emoji' ? emojiCategories : unicodeBlockCategories
-})
+const activeCategory = ref('all')
 
 const filteredIcons = computed(() => {
-  let icons = getIconsByCategory(activeMainCategory.value, activeSubCategory.value)
+  let icons = unicodeIcons
 
+  // 分类过滤
+  if (activeCategory.value !== 'all') {
+    icons = icons.filter((icon) => icon.category === activeCategory.value)
+  }
+
+  // 搜索过滤
   if (searchTerm.value) {
     icons = icons.filter((icon) => icon.name.toLowerCase().includes(searchTerm.value.toLowerCase()))
   }
@@ -45,11 +39,6 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
       console.error('复制失败:', err)
     })
 }
-
-const handleMainCategoryClick = (category: (typeof mainCategories)[number]) => {
-  activeMainCategory.value = category
-  activeSubCategory.value = ''
-}
 </script>
 
 <template>
@@ -58,28 +47,15 @@ const handleMainCategoryClick = (category: (typeof mainCategories)[number]) => {
       <input v-model="searchTerm" type="text" placeholder="搜索符号..." class="search-input" />
     </div>
 
-    <!-- 主分类 -->
-    <div class="main-categories">
-      <button
-        v-for="category in categories"
-        :key="category"
-        :class="{ active: activeMainCategory === category }"
-        @click="handleMainCategoryClick(category)"
-      >
-        {{ category === 'emoji' ? 'Emoji' : 'Unicode' }}
-      </button>
-    </div>
-
-    <!-- 子分类 -->
-    <div class="sub-categories">
-      <button :class="{ active: activeSubCategory === '' }" @click="activeSubCategory = ''">
+    <div class="categories">
+      <button :class="{ active: activeCategory === 'all' }" @click="activeCategory = 'all'">
         全部
       </button>
       <button
-        v-for="category in subCategories"
+        v-for="category in unicodeCategories"
         :key="category"
-        :class="{ active: activeSubCategory === category }"
-        @click="activeSubCategory = category"
+        :class="{ active: activeCategory === category }"
+        @click="activeCategory = category"
       >
         {{ category }}
       </button>
@@ -201,25 +177,25 @@ const handleMainCategoryClick = (category: (typeof mainCategories)[number]) => {
   }
 }
 
-.main-categories {
-  margin-bottom: 16px;
-}
-
-.main-categories button {
-  padding: 8px 16px;
-  margin-right: 8px;
-  font-size: 14px;
-}
-
-.sub-categories {
-  margin-bottom: 20px;
+.categories {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-bottom: 20px;
 }
 
-.sub-categories button {
-  font-size: 12px;
+.categories button {
   padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.categories button.active {
+  background: #4caf50;
+  color: white;
+  border-color: #4caf50;
 }
 </style>

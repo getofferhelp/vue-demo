@@ -12,14 +12,83 @@ interface IconInfo {
   type: IconType
 }
 
-// 辅助函数：转换图标名称
+// 更新图标名称映射
+const iconNameMap: Record<string, string> = {
+  // 温度图标
+  temperature0: 'temperature-empty',
+  temperature1: 'temperature-quarter',
+  temperature2: 'temperature-half',
+  temperature3: 'temperature-three-quarters',
+  temperature4: 'temperature-full',
+
+  // 温度计图标
+  thermometer0: 'thermometer-empty',
+  thermometer1: 'thermometer-quarter',
+  thermometer2: 'thermometer-half',
+  thermometer3: 'thermometer-three-quarters',
+  thermometer4: 'thermometer-full',
+
+  // WiFi图标
+  wifi0: 'wifi-slash',
+  wifi1: 'wifi-weak',
+  wifi2: 'wifi-fair',
+  wifi3: 'wifi',
+
+  // 箭头数字组合
+  arrowdown19: 'arrow-down-1-9',
+  arrowdown91: 'arrow-down-9-1',
+  arrowup19: 'arrow-up-1-9',
+  arrowup91: 'arrow-up-9-1',
+
+  // 骰子图标
+  diced20: 'dice-d20',
+  d20: 'dice-d20',
+  diced6: 'dice-d6',
+  d6: 'dice-d6',
+
+  // 列表
+  list12: 'list-ol',
+
+  // 品牌图标
+  css3: 'css3',
+  css3alt: 'css3-alt',
+  draft2digital: 'draft2digital',
+  html5: 'html5',
+  ns8: 'ns8',
+  page4: 'page4',
+  typo3: 'typo3',
+}
+
+// 添加类型定义
+type IconLibrary = Record<IconType, Set<string>>
+
+// 添加有效的单字母图标列表
+const validSingleLetters: IconLibrary = {
+  far: new Set(['r']), // far 库中有效的单字母图标
+  fab: new Set(['b']), // fab 库中有效的单字母图标
+  fas: new Set([]), // fas 库中有效的单字母图标
+}
+
+// 修改图标名称转换函数
 const convertIconName = (key: string): string => {
   // 1. 移除 'fa' 前缀
+  let converted = key.replace(/^fa/, '')
+
   // 2. 将驼峰命名转换为连字符格式
-  return key
-    .replace(/^fa/, '')
+  converted = converted
     .replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`)
-    .replace(/^-/, '') // 移除开头可能出现的连字符
+    .replace(/([0-9]+)/g, '-$1')
+    .replace(/^-/, '')
+    .replace(/-+/g, '-')
+
+  // 3. 检查是否需要特殊映射
+  const cleanKey = converted.replace(/[-\s]/g, '').toLowerCase()
+  const mappedName = iconNameMap[cleanKey]
+  if (mappedName) {
+    return mappedName
+  }
+
+  return converted
 }
 
 // 获取所有图标并添加类型注解
@@ -49,17 +118,56 @@ const activeTab = ref('solid')
 // 可选：添加搜索功能
 const searchTerm = ref('')
 
-// 过滤图标的计算属性
+// 使用 Map 缓存图标验证结果
+const iconValidationCache = new Map<string, boolean>()
+
+// 优化图标验证函数
+const isValidIcon = (iconName: string, type: IconType): boolean => {
+  const cacheKey = `${type}-${iconName}`
+
+  if (iconValidationCache.has(cacheKey)) {
+    const cachedResult = iconValidationCache.get(cacheKey)
+    return cachedResult ?? false
+  }
+
+  // 检查单字母图标
+  if (iconName.length === 1) {
+    const isValidSingleLetter = validSingleLetters[type].has(iconName.toLowerCase())
+    iconValidationCache.set(cacheKey, isValidSingleLetter)
+    return isValidSingleLetter
+  }
+
+  const library = type === 'fas' ? fas : type === 'far' ? far : fab
+  const isValid = Object.keys(library).some((key) => {
+    const convertedName = convertIconName(key)
+    return convertedName === iconName
+  })
+
+  iconValidationCache.set(cacheKey, isValid)
+  return isValid
+}
+
+// 预处理图标数据
+const processIcons = (icons: IconInfo[]): IconInfo[] => {
+  return icons.filter((icon) => isValidIcon(icon.name, icon.type))
+}
+
+// 预先过滤无效图标
+const validSolidIcons = processIcons(solidIcons)
+const validRegularIcons = processIcons(regularIcons)
+const validBrandIcons = processIcons(brandIcons)
+
+// 优化计算属性
 const filteredSolidIcons = computed(() =>
-  solidIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
+  validSolidIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
 )
 
 const filteredRegularIcons = computed(() =>
-  regularIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
+  validRegularIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
 )
 
 const filteredBrandIcons = computed(() =>
-  brandIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
+  validBrandIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
 )
 
 const showToast = ref(false)
@@ -113,48 +221,42 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
     <!-- 图标展示区域 -->
     <div class="icons-grid">
       <div v-if="activeTab === 'solid'" class="icon-list">
-        <div
-          v-for="icon in filteredSolidIcons"
-          :key="`${icon.type}-${icon.name}`"
-          class="icon-item"
-        >
-          <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
-          <span class="icon-name">{{ icon.name }}</span>
-          <div class="copy-buttons">
-            <button @click="copyIconName(icon, 'name')" title="复制图标名称">名称</button>
-            <button @click="copyIconName(icon, 'html')" title="复制HTML代码">代码</button>
+        <template v-for="icon in filteredSolidIcons" :key="`${icon.type}-${icon.name}`">
+          <div v-show="icon.name.includes(searchTerm.toLowerCase())" class="icon-item">
+            <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
+            <span class="icon-name">{{ icon.name }}</span>
+            <div class="copy-buttons">
+              <button @click="copyIconName(icon, 'name')" title="复制图标名称">名称</button>
+              <button @click="copyIconName(icon, 'html')" title="复制HTML代码">代码</button>
+            </div>
           </div>
-        </div>
+        </template>
       </div>
 
       <div v-if="activeTab === 'regular'" class="icon-list">
-        <div
-          v-for="icon in filteredRegularIcons"
-          :key="`${icon.type}-${icon.name}`"
-          class="icon-item"
-        >
-          <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
-          <span class="icon-name">{{ icon.name }}</span>
-          <div class="copy-buttons">
-            <button @click="copyIconName(icon, 'name')" title="复制图标名称">复制名称</button>
-            <button @click="copyIconName(icon, 'html')" title="复制HTML代码">复制代码</button>
+        <template v-for="icon in filteredRegularIcons" :key="`${icon.type}-${icon.name}`">
+          <div v-show="icon.name.includes(searchTerm.toLowerCase())" class="icon-item">
+            <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
+            <span class="icon-name">{{ icon.name }}</span>
+            <div class="copy-buttons">
+              <button @click="copyIconName(icon, 'name')" title="复制图标名称">复制名称</button>
+              <button @click="copyIconName(icon, 'html')" title="复制HTML代码">复制代码</button>
+            </div>
           </div>
-        </div>
+        </template>
       </div>
 
       <div v-if="activeTab === 'brands'" class="icon-list">
-        <div
-          v-for="icon in filteredBrandIcons"
-          :key="`${icon.type}-${icon.name}`"
-          class="icon-item"
-        >
-          <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
-          <span class="icon-name">{{ icon.name }}</span>
-          <div class="copy-buttons">
-            <button @click="copyIconName(icon, 'name')" title="复制图标名称">复制名称</button>
-            <button @click="copyIconName(icon, 'html')" title="复制HTML代码">复制代码</button>
+        <template v-for="icon in filteredBrandIcons" :key="`${icon.type}-${icon.name}`">
+          <div v-show="icon.name.includes(searchTerm.toLowerCase())" class="icon-item">
+            <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
+            <span class="icon-name">{{ icon.name }}</span>
+            <div class="copy-buttons">
+              <button @click="copyIconName(icon, 'name')" title="复制图标名称">复制名称</button>
+              <button @click="copyIconName(icon, 'html')" title="复制HTML代码">复制代码</button>
+            </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
 
@@ -168,6 +270,9 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
 <style scoped>
 .font-awesome-showcase {
   padding: 20px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .tabs {
@@ -194,12 +299,16 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
 }
 
 .icon-list {
+  contain: content;
+  will-change: transform;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 10px;
+  width: 100%;
 }
 
 .icon-item {
+  contain: layout style paint;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -208,7 +317,7 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
-  min-height: 100px; /* 确保有足够空间显示按钮 */
+  min-height: 100px;
 }
 
 .icon-item:hover {
@@ -299,5 +408,34 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
   background: #4caf50;
   color: white;
   border-color: #4caf50;
+}
+
+/* 优化渲染性能的样式 */
+.icon-list {
+  contain: content;
+  will-change: transform;
+}
+
+.icon-item {
+  contain: layout style paint;
+}
+
+@media (min-width: 1024px) {
+  .icon-list {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .icon-item {
+    min-height: 120px;
+  }
+
+  .icon-name {
+    font-size: 12px;
+  }
+
+  .copy-buttons button {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
 }
 </style>

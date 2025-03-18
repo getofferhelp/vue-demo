@@ -31,7 +31,6 @@ a,
     display: grid;
     grid-template-columns: 1fr;
     padding: 0 2rem;
-    max-width: 95vw;
-    max-width: 1000px;
+    width: 100%;
   }
 }

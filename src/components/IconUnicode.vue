@@ -1,25 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { unicodeIcons, unicodeCategories } from '../data/icons'
+import { unicodeIcons } from '../data/icons'
 
 const searchTerm = ref('')
-const activeCategory = ref('all')
 
-const filteredIcons = computed(() => {
-  let icons = unicodeIcons
-
-  // 分类过滤
-  if (activeCategory.value !== 'all') {
-    icons = icons.filter((icon) => icon.category === activeCategory.value)
-  }
-
-  // 搜索过滤
-  if (searchTerm.value) {
-    icons = icons.filter((icon) => icon.name.toLowerCase().includes(searchTerm.value.toLowerCase()))
-  }
-
-  return icons
-})
+const filteredIcons = computed(() =>
+  unicodeIcons.filter((icon) => icon.name.toLowerCase().includes(searchTerm.value.toLowerCase())),
+)
 
 const showToast = ref(false)
 const toastMessage = ref('')
@@ -45,20 +32,6 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
   <div class="icon-showcase">
     <div class="search-box">
       <input v-model="searchTerm" type="text" placeholder="搜索符号..." class="search-input" />
-    </div>
-
-    <div class="categories">
-      <button :class="{ active: activeCategory === 'all' }" @click="activeCategory = 'all'">
-        全部
-      </button>
-      <button
-        v-for="category in unicodeCategories"
-        :key="category"
-        :class="{ active: activeCategory === category }"
-        @click="activeCategory = category"
-      >
-        {{ category }}
-      </button>
     </div>
 
     <div class="icon-list">

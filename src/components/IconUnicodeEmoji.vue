@@ -150,9 +150,9 @@ const categoriesWithCount = computed(() => {
 }
 
 .categories button.active {
-  background: var(--color-text);
-  color: var(--color-background);
-  border-color: var(--color-text);
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
 }
 
 .icon-list {

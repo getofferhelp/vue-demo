@@ -107,17 +107,17 @@ const tabs = computed(() => [
 .tabs button {
   padding: 8px 16px;
   border: 1px solid var(--color-border);
-  background: var(--color-background);
+  background: white;
   cursor: pointer;
   font-size: 16px;
-  color: var(--color-text);
+  color: black;
   border-radius: 4px;
 }
 
 .tabs button.active {
-  background: var(--color-text);
-  color: var(--color-background);
-  border-color: var(--color-text);
+  background: black;
+  color: white;
+  border-color: black;
 }
 
 .content-section {

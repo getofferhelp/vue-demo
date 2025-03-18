@@ -202,18 +202,7 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
 }
 
 .categories button {
-  padding: 4px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background: var(--color-background);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.categories button.active {
-  background: var(--color-text);
-  color: var(--color-background);
-  border-color: var(--color-text);
+  font-size: 12px;
+  padding: 4px 8px;
 }
 </style>

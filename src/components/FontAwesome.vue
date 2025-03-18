@@ -12,14 +12,22 @@ interface IconInfo {
   type: IconType
 }
 
-// 辅助函数：转换图标名称
+// 添加调试日志
+console.log('Solid Icons:', Object.keys(fas))
+console.log('Regular Icons:', Object.keys(far))
+console.log('Brand Icons:', Object.keys(fab))
+
+// 修改图标名称转换函数，添加日志
 const convertIconName = (key: string): string => {
-  // 1. 移除 'fa' 前缀
-  // 2. 将驼峰命名转换为连字符格式
-  return key
+  const converted = key
     .replace(/^fa/, '')
     .replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`)
-    .replace(/^-/, '') // 移除开头可能出现的连字符
+    .replace(/([0-9]+)/g, '-$1')
+    .replace(/^-/, '')
+    .replace(/-+/g, '-')
+
+  console.log(`Converting icon name: ${key} -> ${converted}`)
+  return converted
 }
 
 // 获取所有图标并添加类型注解
@@ -49,18 +57,35 @@ const activeTab = ref('solid')
 // 可选：添加搜索功能
 const searchTerm = ref('')
 
-// 过滤图标的计算属性
+// 添加图标验证函数
+const isValidIcon = (iconName: string, type: IconType): boolean => {
+  const library = type === 'fas' ? fas : type === 'far' ? far : fab
+  return Object.keys(library).some((key) => convertIconName(key) === iconName)
+}
+
+// 修改过滤图标的计算属性
 const filteredSolidIcons = computed(() =>
-  solidIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
+  solidIcons
+    .filter((icon) => isValidIcon(icon.name, icon.type))
+    .filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
 )
 
 const filteredRegularIcons = computed(() =>
-  regularIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
+  regularIcons
+    .filter((icon) => isValidIcon(icon.name, icon.type))
+    .filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
 )
 
 const filteredBrandIcons = computed(() =>
-  brandIcons.filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
+  brandIcons
+    .filter((icon) => isValidIcon(icon.name, icon.type))
+    .filter((icon) => icon.name.includes(searchTerm.value.toLowerCase())),
 )
+
+// 添加调试信息
+console.log('Available solid icons:', solidIcons.map((i) => i.name).join(', '))
+console.log('Available regular icons:', regularIcons.map((i) => i.name).join(', '))
+console.log('Available brand icons:', brandIcons.map((i) => i.name).join(', '))
 
 const showToast = ref(false)
 const toastMessage = ref('')

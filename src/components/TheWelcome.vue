@@ -102,8 +102,8 @@ const tabs = [
 
 .tabs button {
   padding: 8px 16px;
-  border: none;
-  background: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
   cursor: pointer;
   font-size: 16px;
   color: var(--color-text);
@@ -111,39 +111,76 @@ const tabs = [
 }
 
 .tabs button.active {
-  background: var(--color-background-soft);
-  font-weight: bold;
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
 }
 
 .content-section {
   padding: 20px;
-  background: var(--color-background-soft);
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   margin-bottom: 20px;
 }
 
 .content-section h2 {
   margin-bottom: 10px;
+  color: var(--color-heading);
+}
+
+.content-section p {
+  color: var(--color-text);
+  opacity: 0.8;
 }
 
 .demo-icons,
 .demo-symbols,
 .demo-emojis {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin: 20px 0;
-  font-size: 16px;
+  padding: 15px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 24px;
+  color: var(--color-text);
+}
+
+.demo-symbols span,
+.demo-emojis span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--color-background-soft);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.demo-symbols span:hover,
+.demo-emojis span:hover {
+  transform: scale(1.1);
+  background: var(--color-background-mute);
 }
 
 .view-more {
   display: inline-block;
   margin-top: 10px;
+  padding: 6px 12px;
   color: var(--color-primary);
   text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.3s;
 }
 
 .view-more:hover {
-  text-decoration: underline;
+  background: var(--color-primary);
+  color: white;
+  text-decoration: none;
 }
 
 .demo-section {
@@ -166,6 +203,7 @@ const tabs = [
 
 code {
   background: var(--color-background-mute);
+  color: var(--color-text);
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 14px;

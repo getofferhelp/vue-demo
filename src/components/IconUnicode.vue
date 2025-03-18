@@ -101,8 +101,8 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
 
 .icon-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
 }
 
 .icon-item {
@@ -175,27 +175,5 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
   100% {
     opacity: 0;
   }
-}
-
-.categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.categories button {
-  padding: 4px 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.categories button.active {
-  background: #4caf50;
-  color: white;
-  border-color: #4caf50;
 }
 </style>

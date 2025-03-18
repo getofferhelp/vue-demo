@@ -296,11 +296,13 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
   background: var(--color-background);
   color: var(--color-text);
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .tabs button.active {
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-text);
+  color: var(--color-background);
+  border-color: var(--color-text);
 }
 
 .icons-grid {

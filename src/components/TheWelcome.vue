@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseIcon from './BaseIcon.vue'
-import WelcomeItem from './WelcomeItem.vue'
 
 const { t } = useI18n()
 const activeTab = ref('icons')
@@ -60,10 +59,8 @@ const tabs = computed(() => [
 
   <div class="tab-content">
     <div v-if="activeTab === 'icons'" class="content-section">
-      <WelcomeItem>
-        <template #heading>{{ t('welcome.fontawesome.title') }}</template>
-        <template #default>{{ t('welcome.fontawesome.description') }}</template>
-      </WelcomeItem>
+      <h2>{{ tabs[0].name }}</h2>
+      <p>{{ tabs[0].description }}</p>
       <div class="demo-icons">
         <BaseIcon
           v-for="icon in tabs[0].demo"

@@ -66,13 +66,20 @@ const showToast = ref(false)
 const toastMessage = ref('')
 
 // 修改复制功能
-const copyIconName = (iconName: string) => {
+const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
+  let textToCopy = ''
+  if (copyType === 'name') {
+    textToCopy = icon.name
+    toastMessage.value = '名称已复制！'
+  } else {
+    textToCopy = `<i class="${icon.type} fa-${icon.name}"></i>`
+    toastMessage.value = '代码已复制！'
+  }
+
   navigator.clipboard
-    .writeText(iconName)
+    .writeText(textToCopy)
     .then(() => {
-      toastMessage.value = '名称已复制！'
       showToast.value = true
-      // 3秒后自动隐藏
       setTimeout(() => {
         showToast.value = false
       }, 3000)
@@ -110,10 +117,13 @@ const copyIconName = (iconName: string) => {
           v-for="icon in filteredSolidIcons"
           :key="`${icon.type}-${icon.name}`"
           class="icon-item"
-          @click="copyIconName(icon.name)"
         >
           <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
           <span class="icon-name">{{ icon.name }}</span>
+          <div class="copy-buttons">
+            <button @click="copyIconName(icon, 'name')" title="复制图标名称">名称</button>
+            <button @click="copyIconName(icon, 'html')" title="复制HTML代码">代码</button>
+          </div>
         </div>
       </div>
 
@@ -122,10 +132,13 @@ const copyIconName = (iconName: string) => {
           v-for="icon in filteredRegularIcons"
           :key="`${icon.type}-${icon.name}`"
           class="icon-item"
-          @click="copyIconName(icon.name)"
         >
           <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
           <span class="icon-name">{{ icon.name }}</span>
+          <div class="copy-buttons">
+            <button @click="copyIconName(icon, 'name')" title="复制图标名称">复制名称</button>
+            <button @click="copyIconName(icon, 'html')" title="复制HTML代码">复制代码</button>
+          </div>
         </div>
       </div>
 
@@ -134,10 +147,13 @@ const copyIconName = (iconName: string) => {
           v-for="icon in filteredBrandIcons"
           :key="`${icon.type}-${icon.name}`"
           class="icon-item"
-          @click="copyIconName(icon.name)"
         >
           <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
           <span class="icon-name">{{ icon.name }}</span>
+          <div class="copy-buttons">
+            <button @click="copyIconName(icon, 'name')" title="复制图标名称">复制名称</button>
+            <button @click="copyIconName(icon, 'html')" title="复制HTML代码">复制代码</button>
+          </div>
         </div>
       </div>
     </div>
@@ -192,6 +208,7 @@ const copyIconName = (iconName: string) => {
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
+  min-height: 100px; /* 确保有足够空间显示按钮 */
 }
 
 .icon-item:hover {
@@ -260,5 +277,27 @@ const copyIconName = (iconName: string) => {
   100% {
     opacity: 0;
   }
+}
+
+.copy-buttons {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.copy-buttons button {
+  font-size: 10px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-buttons button:hover {
+  background: #4caf50;
+  color: white;
+  border-color: #4caf50;
 }
 </style>

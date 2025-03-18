@@ -23,6 +23,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@unicode/unicode-15.1.0": "^1.6.5",
     "emoji-mart-vue-fast": "^15.0.4",
     "pinia": "^3.0.1",
     "unicode-blocks": "^2.0.4",

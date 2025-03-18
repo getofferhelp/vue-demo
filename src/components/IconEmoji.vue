@@ -19,23 +19,25 @@ const filteredIcons = computed(() => {
     totalIcons: emojiIcons.length,
   })
 
-  let icons = emojiIcons
+  let icons = [...emojiIcons] // 创建副本以避免修改原数组
 
-  // 如果选择了特定分类
+  // 如果选择了特定分类且不是 'all'
   if (activeCategory.value !== 'all') {
     icons = icons.filter((icon) => icon.category === activeCategory.value)
+    console.log('Filtered by category:', activeCategory.value, icons.length)
   }
 
   // 搜索过滤
   if (searchTerm.value) {
+    const searchLower = searchTerm.value.toLowerCase()
     icons = icons.filter(
       (icon) =>
-        icon.name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        icon.keywords?.some((keyword) => keyword.includes(searchTerm.value.toLowerCase())),
+        icon.name.toLowerCase().includes(searchLower) ||
+        icon.keywords?.some((keyword) => keyword.toLowerCase().includes(searchLower)),
     )
+    console.log('Filtered by search:', searchTerm.value, icons.length)
   }
 
-  console.log('Filtered icons count:', icons.length)
   return icons
 })
 
@@ -70,7 +72,7 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
       <input v-model="searchTerm" type="text" placeholder="搜索表情..." class="search-input" />
     </div>
 
-    <!-- 添加分类选择 -->
+    <!-- 修改分类显示 -->
     <div class="categories">
       <button :class="{ active: activeCategory === 'all' }" @click="activeCategory = 'all'">
         全部 ({{ emojiIcons.length }})
@@ -82,6 +84,7 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
         @click="activeCategory = category"
       >
         {{ category }}
+        ({{ emojiIcons.filter((icon) => icon.category === category).length }})
       </button>
     </div>
 

@@ -2,7 +2,6 @@
 import { RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { ref, provide } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 // 暗色模式状态
 const isDark = ref(false)
@@ -16,12 +15,6 @@ const toggleDark = () => {
 // 提供给子组件使用
 provide('isDark', isDark)
 provide('toggleDark', toggleDark)
-
-const { locale } = useI18n()
-
-const toggleLanguage = () => {
-  locale.value = locale.value === 'zh' ? 'en' : 'zh'
-}
 </script>
 
 <template>
@@ -32,10 +25,6 @@ const toggleLanguage = () => {
       </div>
     </header>
 
-    <button @click="toggleLanguage">
-      {{ locale === 'zh' ? 'English' : '中文' }}
-    </button>
-
     <RouterView />
   </div>
 </template>
@@ -45,11 +34,13 @@ const toggleLanguage = () => {
 :root {
   --color-background: #ffffff;
   --color-text: #213547;
+  --color-background-soft: #f9f9f9;
 }
 
 :root.dark {
   --color-background: #213547;
   --color-text: #ffffff;
+  --color-background-soft: #2c4159;
 }
 
 body {
@@ -115,18 +106,8 @@ nav a:first-of-type {
     text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
-
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
-
-/* 添加主题切换按钮样式 */
-.theme-toggle {
-  padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  cursor: pointer;
 }
 </style>

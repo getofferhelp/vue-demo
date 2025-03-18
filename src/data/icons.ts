@@ -32,7 +32,12 @@ export const emojiIcons = Object.values(typedEmojiData.emojis || {}).map((emoji)
 
 // 如果数据加载失败，提供一些默认的emoji
 const defaultEmojis = [
-  { name: 'smile', icon: '😊', category: 'smileys', keywords: ['happy', 'joy'] },
+  {
+    name: 'smile',
+    icon: '😊',
+    category: 'smileys',
+    keywords: ['happy', 'joy'],
+  },
   { name: 'heart', icon: '❤️', category: 'symbols', keywords: ['love'] },
   { name: 'star', icon: '⭐', category: 'symbols', keywords: ['favorite'] },
   { name: 'sun', icon: '☀️', category: 'nature', keywords: ['weather'] },
@@ -45,17 +50,69 @@ if (!emojiIcons.length) {
   emojiIcons.push(...defaultEmojis)
 }
 
+// 处理 Unicode 数据
 export const unicodeIcons = [
-  { name: 'star', icon: '★' },
-  { name: 'heart', icon: '♥' },
-  { name: 'diamond', icon: '◆' },
-  { name: 'circle', icon: '●' },
-  { name: 'square', icon: '■' },
-  { name: 'triangle', icon: '▲' },
-  { name: 'arrow-right', icon: '→' },
-  { name: 'check', icon: '✓' },
-  // 可以继续添加更多...
+  // 基础符号
+  { name: 'bullet', icon: '•', category: 'basic' },
+  { name: 'middot', icon: '·', category: 'basic' },
+  { name: 'star', icon: '★', category: 'basic' },
+  { name: 'star-outline', icon: '☆', category: 'basic' },
+  { name: 'heart', icon: '♥', category: 'basic' },
+  { name: 'heart-outline', icon: '♡', category: 'basic' },
+
+  // 几何图形
+  { name: 'square', icon: '■', category: 'geometric' },
+  { name: 'square-outline', icon: '□', category: 'geometric' },
+  { name: 'circle', icon: '●', category: 'geometric' },
+  { name: 'circle-outline', icon: '○', category: 'geometric' },
+  { name: 'triangle', icon: '▲', category: 'geometric' },
+  { name: 'triangle-outline', icon: '△', category: 'geometric' },
+  { name: 'diamond', icon: '◆', category: 'geometric' },
+  { name: 'diamond-outline', icon: '◇', category: 'geometric' },
+
+  // 箭头
+  { name: 'arrow-left', icon: '←', category: 'arrows' },
+  { name: 'arrow-right', icon: '→', category: 'arrows' },
+  { name: 'arrow-up', icon: '↑', category: 'arrows' },
+  { name: 'arrow-down', icon: '↓', category: 'arrows' },
+  { name: 'arrow-double-left', icon: '⇐', category: 'arrows' },
+  { name: 'arrow-double-right', icon: '⇒', category: 'arrows' },
+  { name: 'arrow-double-up', icon: '⇑', category: 'arrows' },
+  { name: 'arrow-double-down', icon: '⇓', category: 'arrows' },
+
+  // 数学符号
+  { name: 'plus', icon: '＋', category: 'math' },
+  { name: 'minus', icon: '－', category: 'math' },
+  { name: 'multiply', icon: '×', category: 'math' },
+  { name: 'divide', icon: '÷', category: 'math' },
+  { name: 'equal', icon: '＝', category: 'math' },
+  { name: 'not-equal', icon: '≠', category: 'math' },
+  { name: 'infinity', icon: '∞', category: 'math' },
+  { name: 'plus-minus', icon: '±', category: 'math' },
+
+  // 标点符号
+  { name: 'check', icon: '✓', category: 'marks' },
+  { name: 'cross', icon: '✗', category: 'marks' },
+  { name: 'copyright', icon: '©', category: 'marks' },
+  { name: 'registered', icon: '®', category: 'marks' },
+  { name: 'trademark', icon: '™', category: 'marks' },
+  { name: 'degree', icon: '°', category: 'marks' },
+
+  // 货币符号
+  { name: 'yuan', icon: '¥', category: 'currency' },
+  { name: 'dollar', icon: '$', category: 'currency' },
+  { name: 'euro', icon: '€', category: 'currency' },
+  { name: 'pound', icon: '£', category: 'currency' },
+
+  // 音乐符号
+  { name: 'music-note', icon: '♪', category: 'music' },
+  { name: 'music-notes', icon: '♫', category: 'music' },
+  { name: 'music-eighth', icon: '♩', category: 'music' },
+  { name: 'music-beamed', icon: '♬', category: 'music' },
 ]
+
+// 获取所有 Unicode 符号分类
+export const unicodeCategories = Array.from(new Set(unicodeIcons.map((icon) => icon.category)))
 
 // 可选：按分类获取 emoji
 export const getEmojisByCategory = (category: string) => {

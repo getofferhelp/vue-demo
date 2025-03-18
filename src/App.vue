@@ -1,17 +1,51 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { ref, provide } from 'vue'
+
+// 暗色模式状态
+const isDark = ref(false)
+
+// 切换暗色模式
+const toggleDark = () => {
+  isDark.value = !isDark.value
+  document.documentElement.classList.toggle('dark')
+}
+
+// 提供给子组件使用
+provide('isDark', isDark)
+provide('toggleDark', toggleDark)
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="多种工具" />
-    </div>
-  </header>
+  <div :class="{ dark: isDark }">
+    <header>
+      <div class="wrapper">
+        <HelloWorld msg="多种工具" />
+      </div>
+    </header>
 
-  <RouterView />
+    <RouterView />
+  </div>
 </template>
+
+<style>
+/* 添加根级别的主题变量 */
+:root {
+  --color-background: #ffffff;
+  --color-text: #213547;
+}
+
+:root.dark {
+  --color-background: #213547;
+  --color-text: #ffffff;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+</style>
 
 <style scoped>
 header {
@@ -74,5 +108,14 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
+}
+
+/* 添加主题切换按钮样式 */
+.theme-toggle {
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>

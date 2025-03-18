@@ -1,5 +1,6 @@
 import emojiData from '@emoji-mart/data'
 import unicodeEmojiJson from 'unicode-emoji-json'
+import { blocks, categories, properties } from '@unicode/unicode-15.1.0'
 
 // 先添加调试日志查看实际数据结构
 console.log('Raw emoji data structure:', emojiData)
@@ -51,98 +52,69 @@ if (!emojiIcons.length) {
   emojiIcons.push(...defaultEmojis)
 }
 
-// 扩展 unicodeIcons
-export const unicodeIcons = [
-  // 基础符号
-  { name: 'bullet', icon: '•', category: 'basic' },
-  { name: 'middot', icon: '·', category: 'basic' },
-  { name: 'star', icon: '★', category: 'basic' },
-  { name: 'star-outline', icon: '☆', category: 'basic' },
-  { name: 'heart', icon: '♥', category: 'basic' },
-  { name: 'heart-outline', icon: '♡', category: 'basic' },
-
-  // 几何图形
-  { name: 'square', icon: '■', category: 'geometric' },
-  { name: 'square-outline', icon: '□', category: 'geometric' },
-  { name: 'circle', icon: '●', category: 'geometric' },
-  { name: 'circle-outline', icon: '○', category: 'geometric' },
-  { name: 'triangle', icon: '▲', category: 'geometric' },
-  { name: 'triangle-outline', icon: '△', category: 'geometric' },
-  { name: 'diamond', icon: '◆', category: 'geometric' },
-  { name: 'diamond-outline', icon: '◇', category: 'geometric' },
-
-  // 箭头
-  { name: 'arrow-left', icon: '←', category: 'arrows' },
-  { name: 'arrow-right', icon: '→', category: 'arrows' },
-  { name: 'arrow-up', icon: '↑', category: 'arrows' },
-  { name: 'arrow-down', icon: '↓', category: 'arrows' },
-  { name: 'arrow-double-left', icon: '⇐', category: 'arrows' },
-  { name: 'arrow-double-right', icon: '⇒', category: 'arrows' },
-  { name: 'arrow-double-up', icon: '⇑', category: 'arrows' },
-  { name: 'arrow-double-down', icon: '⇓', category: 'arrows' },
-
-  // 数学符号
-  { name: 'plus', icon: '＋', category: 'math' },
-  { name: 'minus', icon: '－', category: 'math' },
-  { name: 'multiply', icon: '×', category: 'math' },
-  { name: 'divide', icon: '÷', category: 'math' },
-  { name: 'equal', icon: '＝', category: 'math' },
-  { name: 'not-equal', icon: '≠', category: 'math' },
-  { name: 'infinity', icon: '∞', category: 'math' },
-  { name: 'plus-minus', icon: '±', category: 'math' },
-
-  // 标点符号
-  { name: 'check', icon: '✓', category: 'marks' },
-  { name: 'cross', icon: '✗', category: 'marks' },
-  { name: 'copyright', icon: '©', category: 'marks' },
-  { name: 'registered', icon: '®', category: 'marks' },
-  { name: 'trademark', icon: '™', category: 'marks' },
-  { name: 'degree', icon: '°', category: 'marks' },
-
-  // 货币符号
-  { name: 'yuan', icon: '¥', category: 'currency' },
-  { name: 'dollar', icon: '$', category: 'currency' },
-  { name: 'euro', icon: '€', category: 'currency' },
-  { name: 'pound', icon: '£', category: 'currency' },
-
-  // 音乐符号
-  { name: 'music-note', icon: '♪', category: 'music' },
-  { name: 'music-notes', icon: '♫', category: 'music' },
-  { name: 'music-eighth', icon: '♩', category: 'music' },
-  { name: 'music-beamed', icon: '♬', category: 'music' },
-
-  ...Object.entries(unicodeEmojiJson).map(([char, data]) => ({
-    name: data.name.toLowerCase(),
-    icon: char,
-    category: data.group,
-    keywords: [data.subgroup],
-  })),
-
-  // 原有的 Unicode 符号
-  // ... existing code ...
-]
-
-// 更新分类获取逻辑
-export const unicodeCategories = Array.from(
-  new Set([
-    'basic',
-    'geometric',
-    'arrows',
-    'math',
-    'marks',
-    'currency',
-    'music',
-    ...Object.values(unicodeEmojiJson).map((data) => data.group),
-  ]),
-)
-
-// 可选：按分类获取 emoji
-export const getEmojisByCategory = (category: string) => {
-  return emojiIcons.filter((emoji) => emoji.category === category)
+// 创建 Unicode 字符数组
+const createUnicodeRange = (start: number, end: number, category: string) => {
+  const chars = []
+  for (let i = start; i <= end; i++) {
+    try {
+      const char = String.fromCodePoint(i)
+      chars.push({
+        name: `U+${i.toString(16).toUpperCase().padStart(4, '0')}`,
+        icon: char,
+        category: category,
+        codePoint: i,
+      })
+    } catch (e) {
+      console.warn(`无法创建码点 ${i} 的字符`)
+    }
+  }
+  return chars
 }
 
-// 获取所有分类
-export const emojiCategories = Array.from(new Set(emojiIcons.map((emoji) => emoji.category)))
+// 定义主分类
+export const mainCategories = ['unicode', 'emoji'] as const
+
+// Unicode 官方分类（这些是常用的 Unicode 块）
+export const unicodeBlockCategories = [
+  'Basic Latin',
+  'Mathematical Operators',
+  'Geometric Shapes',
+  'Arrows',
+  'Box Drawing',
+  'Currency Symbols',
+  'General Punctuation',
+  'Supplemental Symbols and Pictographs',
+  // ... 可以根据需要添加更多
+] as const
+
+// Emoji 分类
+export const emojiCategories = Array.from(
+  new Set(Object.values(unicodeEmojiJson).map((data) => data.group)),
+)
+
+// 根据分类获取图标
+export const getIconsByCategory = (
+  mainCategory: (typeof mainCategories)[number],
+  subCategory?: string,
+) => {
+  if (mainCategory === 'emoji') {
+    return Object.entries(unicodeEmojiJson)
+      .filter(([_, data]) => !subCategory || data.group === subCategory)
+      .map(([char, data]) => ({
+        name: data.name.toLowerCase(),
+        icon: char,
+        category: data.group,
+      }))
+  }
+
+  return blocks
+    .filter((block) => !subCategory || block.name === subCategory)
+    .flatMap((block) => {
+      const start = Number.parseInt(block.start, 16)
+      const end = Number.parseInt(block.end, 16)
+      return createUnicodeRange(start, end, block.name)
+    })
+}
 
 console.log('Processed emoji icons:', emojiIcons)
 console.log('Categories:', emojiCategories)

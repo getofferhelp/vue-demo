@@ -2,14 +2,26 @@
 import { RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { ref, provide } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 // 暗色模式状态
 const isDark = ref(false)
+const { locale } = useI18n()
 
 // 切换暗色模式
 const toggleDark = () => {
   isDark.value = !isDark.value
   document.documentElement.classList.toggle('dark')
+}
+
+const languageLabels = {
+  zh: '🇨🇳',
+  en: '🇺🇸',
+  es: '🇪🇸',
+}
+
+const toggleLanguage = (lang: string) => {
+  locale.value = lang
 }
 
 // 提供给子组件使用
@@ -19,6 +31,29 @@ provide('toggleDark', toggleDark)
 
 <template>
   <div :class="{ dark: isDark }">
+    <!-- 添加固定定位的控件容器 -->
+    <div class="global-controls">
+      <div class="language-dropdown">
+        <button class="language-btn">
+          {{ languageLabels[locale as keyof typeof languageLabels] }}
+          <div class="dropdown-content">
+            <button v-if="locale !== 'zh'" @click="toggleLanguage('zh')" class="dropdown-item">
+              🇨🇳
+            </button>
+            <button v-if="locale !== 'en'" @click="toggleLanguage('en')" class="dropdown-item">
+              🇺🇸
+            </button>
+            <button v-if="locale !== 'es'" @click="toggleLanguage('es')" class="dropdown-item">
+              🇪🇸
+            </button>
+          </div>
+        </button>
+      </div>
+      <button @click="toggleDark" class="theme-toggle">
+        <font-awesome-icon :icon="isDark ? ['fas', 'sun'] : ['fas', 'moon']" />
+      </button>
+    </div>
+
     <header>
       <div class="wrapper">
         <HelloWorld msg="多种工具" />
@@ -109,5 +144,73 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
+}
+
+.global-controls {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.global-controls > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background: var(--color-background-soft);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.language-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1.2rem;
+  color: var(--color-text);
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 4px;
+  min-width: 60px;
+}
+
+.language-btn:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: center;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1.2rem;
+  color: var(--color-text);
 }
 </style>

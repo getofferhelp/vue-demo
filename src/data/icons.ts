@@ -1,6 +1,6 @@
 import emojiData from '@emoji-mart/data'
 import unicodeEmojiJson from 'unicode-emoji-json'
-import unicodeProperties from 'unicode-properties'
+import { blocks, categories, properties } from '@unicode/unicode-15.1.0'
 
 // 先添加调试日志查看实际数据结构
 console.log('Raw emoji data structure:', emojiData)
@@ -52,78 +52,51 @@ if (!emojiIcons.length) {
   emojiIcons.push(...defaultEmojis)
 }
 
-// 定义 Unicode 块的基本范围，调整起始位置避开控制字符
-const unicodeBlocks = [
-  {
-    name: 'Basic Latin (Printable)',
-    start: 0x0020, // 从空格开始，避开控制字符
-    end: 0x007f,
-  },
-  {
-    name: 'Latin-1 Supplement',
-    start: 0x00a0, // 从非断行空格开始
-    end: 0x00ff,
-  },
-  {
-    name: 'Mathematical Operators',
-    start: 0x2200,
-    end: 0x22ff,
-  },
-  {
-    name: 'Geometric Shapes',
-    start: 0x25a0,
-    end: 0x25ff,
-  },
-  {
-    name: 'Arrows',
-    start: 0x2190,
-    end: 0x21ff,
-  },
-  {
-    name: 'Box Drawing',
-    start: 0x2500,
-    end: 0x257f,
-  },
-  {
-    name: 'Currency Symbols',
-    start: 0x20a0,
-    end: 0x20cf,
-  },
-  {
-    name: 'General Punctuation',
-    start: 0x2000,
-    end: 0x206f,
-  },
-  {
-    name: 'CJK Symbols and Punctuation',
-    start: 0x3000,
-    end: 0x303f,
-  },
-  {
-    name: 'Hiragana',
-    start: 0x3040,
-    end: 0x309f,
-  },
-  {
-    name: 'Katakana',
-    start: 0x30a0,
-    end: 0x30ff,
-  },
-]
+// 创建 Unicode 字符数组
+const createUnicodeRange = (start: number, end: number, category: string) => {
+  const chars = []
+  for (let i = start; i <= end; i++) {
+    try {
+      const char = String.fromCodePoint(i)
+      chars.push({
+        name: `U+${i.toString(16).toUpperCase().padStart(4, '0')}`,
+        icon: char,
+        category: category,
+        codePoint: i,
+      })
+    } catch (e) {
+      console.warn(`无法创建码点 ${i} 的字符`)
+    }
+  }
+  return chars
+}
 
 // 定义主分类
 export const mainCategories = ['unicode', 'emoji'] as const
 
-// Unicode 分类
-export const unicodeBlockCategories = unicodeBlocks.map((block) => block.name)
+// Unicode 官方分类（这些是常用的 Unicode 块）
+export const unicodeBlockCategories = [
+  'Basic Latin',
+  'Mathematical Operators',
+  'Geometric Shapes',
+  'Arrows',
+  'Box Drawing',
+  'Currency Symbols',
+  'General Punctuation',
+  'Supplemental Symbols and Pictographs',
+  // ... 可以根据需要添加更多
+] as const
 
-// 添加调试日志
-const getIconsByCategory = (
+// Emoji 分类
+export const emojiCategories = Array.from(
+  new Set(Object.values(unicodeEmojiJson).map((data) => data.group)),
+)
+
+// 根据分类获取图标
+export const getIconsByCategory = (
   mainCategory: (typeof mainCategories)[number],
   subCategory?: string,
 ) => {
-  console.log('Getting icons for:', mainCategory, subCategory)
-
   if (mainCategory === 'emoji') {
     return Object.entries(unicodeEmojiJson)
       .filter(([_, data]) => !subCategory || data.group === subCategory)
@@ -134,62 +107,14 @@ const getIconsByCategory = (
       }))
   }
 
-  const block = unicodeBlocks.find((b) => !subCategory || b.name === subCategory)
-  console.log('Found Unicode block:', block)
-
-  if (!block) {
-    console.warn('No Unicode block found for category:', subCategory)
-    return []
-  }
-
-  const chars = createUnicodeRange(block.start, block.end, block.name)
-  console.log('Generated Unicode chars:', chars.length)
-
-  return chars
+  return blocks
+    .filter((block) => !subCategory || block.name === subCategory)
+    .flatMap((block) => {
+      const start = Number.parseInt(block.start, 16)
+      const end = Number.parseInt(block.end, 16)
+      return createUnicodeRange(start, end, block.name)
+    })
 }
-
-// 创建 Unicode 字符数组，添加调试信息
-const createUnicodeRange = (start: number, end: number, category: string) => {
-  console.log('Creating Unicode range:', start, end, category)
-  const chars = []
-  for (let i = start; i <= end; i++) {
-    try {
-      const char = String.fromCodePoint(i)
-      const props = unicodeProperties.getProperties(i)
-
-      // 跳过控制字符和未分配的码点
-      // 注意：属性名称是 'gc' (General Category)
-      if (
-        props.gc === 'Cc' || // Control
-        props.gc === 'Cn' || // Unassigned
-        props.gc === 'Cf' // Format
-      ) {
-        continue
-      }
-
-      chars.push({
-        name: `U+${i.toString(16).toUpperCase().padStart(4, '0')} ${props.name || ''}`,
-        icon: char,
-        category: category,
-        codePoint: i,
-        description: props.gc || '', // 使用 gc 而不是 General_Category
-      })
-    } catch (e) {
-      console.warn(`Error creating character at ${i}:`, e)
-    }
-  }
-  console.log(`Created ${chars.length} characters for ${category}`)
-  return chars
-}
-
-// 确保 unicodeBlocks 不为空
-console.log('Available Unicode blocks:', unicodeBlocks)
-console.log('Unicode categories:', unicodeBlockCategories)
-
-// Emoji 分类
-export const emojiCategories = Array.from(
-  new Set(Object.values(unicodeEmojiJson).map((data) => data.group)),
-)
 
 console.log('Processed emoji icons:', emojiIcons)
 console.log('Categories:', emojiCategories)

@@ -283,14 +283,15 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
 
 .tabs button {
   padding: 8px 16px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  background: white;
+  background: var(--color-background);
+  color: var(--color-text);
   cursor: pointer;
 }
 
 .tabs button.active {
-  background: #4caf50;
+  background: var(--color-primary);
   color: white;
 }
 
@@ -313,15 +314,16 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
   flex-direction: column;
   align-items: center;
   padding: 8px;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
   min-height: 100px;
+  background: var(--color-background);
 }
 
 .icon-item:hover {
-  background: #f5f5f5;
+  background: var(--color-background-soft);
   transform: scale(1.05);
 }
 
@@ -340,9 +342,11 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
 .search-input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 16px;
+  background: var(--color-background);
+  color: var(--color-text);
 }
 
 .search-input:focus {
@@ -397,17 +401,18 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
 .copy-buttons button {
   font-size: 10px;
   padding: 2px 4px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 3px;
-  background: white;
+  background: var(--color-background);
+  color: var(--color-text);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .copy-buttons button:hover {
-  background: #4caf50;
+  background: var(--color-primary);
   color: white;
-  border-color: #4caf50;
+  border-color: var(--color-primary);
 }
 
 /* 优化渲染性能的样式 */

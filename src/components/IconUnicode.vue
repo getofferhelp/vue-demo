@@ -98,9 +98,11 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
 .search-input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 16px;
+  background: var(--color-background);
+  color: var(--color-text);
 }
 
 .icon-list {
@@ -114,9 +116,10 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
   flex-direction: column;
   align-items: center;
   padding: 8px;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   min-height: 100px;
+  background: var(--color-background);
 }
 
 .icon-display {
@@ -140,17 +143,18 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
 .copy-buttons button {
   font-size: 10px;
   padding: 2px 4px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 3px;
-  background: white;
+  background: var(--color-background);
+  color: var(--color-text);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .copy-buttons button:hover {
-  background: #4caf50;
+  background: var(--color-primary);
   color: white;
-  border-color: #4caf50;
+  border-color: var(--color-primary);
 }
 
 .toast {

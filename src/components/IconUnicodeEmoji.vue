@@ -118,9 +118,11 @@ const categoriesWithCount = computed(() => {
 .search-input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 16px;
+  background: var(--color-background);
+  color: var(--color-text);
 }
 
 .categories {
@@ -132,17 +134,18 @@ const categoriesWithCount = computed(() => {
 
 .categories button {
   padding: 4px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  background: white;
+  background: var(--color-background);
+  color: var(--color-text);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .categories button.active {
-  background: #4caf50;
+  background: var(--color-primary);
   color: white;
-  border-color: #4caf50;
+  border-color: var(--color-primary);
 }
 
 .icon-list {
@@ -156,9 +159,10 @@ const categoriesWithCount = computed(() => {
   flex-direction: column;
   align-items: center;
   padding: 8px;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   min-height: 100px;
+  background: var(--color-background);
 }
 
 .icon-display {

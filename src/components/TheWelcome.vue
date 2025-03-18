@@ -165,7 +165,7 @@ const tabs = [
 }
 
 code {
-  background: #f1f1f1;
+  background: var(--color-background-mute);
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 14px;

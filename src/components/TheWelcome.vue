@@ -65,7 +65,7 @@ const tabs = [
           :key="icon.name"
           :name="icon.name"
           :type="icon.type"
-          size="2x"
+          size="lg"
         />
       </div>
       <router-link to="/icons" class="view-more">查看更多图标 →</router-link>
@@ -132,7 +132,7 @@ const tabs = [
   display: flex;
   gap: 20px;
   margin: 20px 0;
-  font-size: 24px;
+  font-size: 16px;
 }
 
 .view-more {

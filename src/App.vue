@@ -18,7 +18,11 @@ provide('toggleDark', toggleDark)
 </script>
 
 <template>
-  <div :class="{ dark: isDark }">
+  <div :class="{ dark: isDark }" class="app-container">
+    <button @click="toggleDark" class="theme-toggle">
+      <font-awesome-icon :icon="isDark ? ['fas', 'sun'] : ['fas', 'moon']" />
+    </button>
+
     <header>
       <div class="wrapper">
         <HelloWorld msg="多种工具" />
@@ -48,6 +52,31 @@ body {
 </style>
 
 <style scoped>
+.app-container {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: max(20px, calc((100% - 1000px) / 2 + 20px));
+  z-index: 1000;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-background);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+  background: var(--color-background-soft);
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -108,14 +137,5 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
-
-/* 添加主题切换按钮样式 */
-.theme-toggle {
-  padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  cursor: pointer;
 }
 </style>

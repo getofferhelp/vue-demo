@@ -70,8 +70,8 @@ const copyIcon = (icon: { name: string; icon: string }, copyType: 'name' | 'icon
         <div class="icon-display">{{ icon.icon }}</div>
         <span class="icon-name">{{ icon.name }}</span>
         <div class="copy-buttons">
-          <button @click="copyIcon(icon, 'name')" title="复制字符编码">复制编码</button>
-          <button @click="copyIcon(icon, 'icon')" title="复制字符">复制字符</button>
+          <button @click="copyIcon(icon, 'name')" title="复制字符编码">编码</button>
+          <button @click="copyIcon(icon, 'icon')" title="复制字符">字符</button>
         </div>
       </div>
     </div>

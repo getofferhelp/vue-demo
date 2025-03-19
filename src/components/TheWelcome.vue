@@ -74,7 +74,7 @@ const tabs = [
     <div v-if="activeTab === 'unicode'">
       <WelcomeItem>
         <template #icon>
-          <UnicodeIcon />
+          <Unicode />
         </template>
         <template #heading>{{ tabs[1].name }}</template>
         {{ tabs[1].description }}

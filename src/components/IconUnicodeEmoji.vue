@@ -91,8 +91,8 @@ const categoriesWithCount = computed(() => {
         <div class="icon-display">{{ emoji.icon }}</div>
         <span class="icon-name">{{ emoji.name }}</span>
         <div class="copy-buttons">
-          <button @click="copyIcon(emoji, 'name')" title="复制图标名称">名称</button>
-          <button @click="copyIcon(emoji, 'icon')" title="复制图标">图标</button>
+          <button @click="copyIcon(emoji, 'name')" title="复制图标名称">复制名称</button>
+          <button @click="copyIcon(emoji, 'icon')" title="复制图标">复制图标</button>
         </div>
       </div>
     </div>

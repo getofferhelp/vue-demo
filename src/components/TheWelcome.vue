@@ -68,7 +68,7 @@ const tabs = [
           <span v-for="emoji in tabs[0].emojis" :key="emoji">{{ emoji }}</span>
         </div>
       </WelcomeItem>
-      <router-link to="/unicode-emoji" class="view-more">查看更多表情 →</router-link>
+      <router-link to="/emoji" class="view-more">查看更多表情 →</router-link>
     </div>
 
     <div v-if="activeTab === 'unicode'">

@@ -17,7 +17,7 @@ interface IconDemo {
 const tabs = [
   {
     id: 'icons',
-    name: 'Font Awesome',
+    name: 'Icons',
     description: '强大的矢量图标库，包含品牌图标、实底和轮廓样式等',
     demo: [
       { name: 'user', type: 'fas' as IconType },
@@ -30,13 +30,13 @@ const tabs = [
   },
   {
     id: 'unicode',
-    name: 'Unicode 字符',
+    name: 'Unicode ',
     description: '包含基础拉丁字符、数学符号、几何图形等 Unicode 字符',
     symbols: ['←', '→', '△', '▽', '♠', '♥', '♦', '♣', '✓', '✗', '☀', '☂'],
   },
   {
     id: 'unicode-emoji',
-    name: 'Unicode Emoji',
+    name: 'Emoji',
     description: '完整的 Unicode 表情符号集合，包含表情、人物、自然等分类',
     emojis: ['😊', '👋', '🌟', '🎉', '🎨', '🚀', '🌈', '🎸', '🌺', '🍕', '🎮', '📱'],
   },

@@ -65,16 +65,18 @@ body {
   right: max(20px, calc((100% - 1000px) / 2 + 20px));
   z-index: 1000;
   padding: 8px;
-  border: 1px solid var(--color-border);
+  border: none;
   border-radius: 4px;
   background: var(--color-background);
   color: var(--color-text);
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .theme-toggle:hover {
   background: var(--color-background-soft);
+  transform: scale(1.05);
 }
 
 header {

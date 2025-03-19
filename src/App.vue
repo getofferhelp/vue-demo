@@ -54,6 +54,7 @@ body {
 <style scoped>
 .app-container {
   position: relative;
+  width: 90vw;
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 20px;

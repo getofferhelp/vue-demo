@@ -28,6 +28,7 @@ const isDark = inject('isDark') as Ref<boolean>
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 h1 {

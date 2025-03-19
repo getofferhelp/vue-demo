@@ -239,8 +239,8 @@ const copyIconName = (icon: IconInfo, copyType: 'name' | 'html') => {
             <BaseIcon :name="icon.name" :type="icon.type" size="lg" />
             <span class="icon-name">{{ icon.name }}</span>
             <div class="copy-buttons">
-              <button @click="copyIconName(icon, 'name')" title="复制图标名称">名称</button>
-              <button @click="copyIconName(icon, 'html')" title="复制HTML代码">代码</button>
+              <button @click="copyIconName(icon, 'name')" title="复制图标名称">复制名称</button>
+              <button @click="copyIconName(icon, 'html')" title="复制HTML代码">复制代码</button>
             </div>
           </div>
         </template>

@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import BaseIcon from './BaseIcon.vue'
 
-const activeTab = ref('unicode-emoji')
+const activeTab = ref('icons')
 
 // 定义图标类型
 type IconType = 'fas' | 'far' | 'fab'
@@ -16,19 +16,6 @@ interface IconDemo {
 
 const tabs = [
   {
-    id: 'unicode-emoji',
-    name: 'Emoji',
-    description: '完整的 Unicode 表情符号集合，包含表情、人物、自然等分类',
-    emojis: ['😊', '👋', '🌟', '🎉', '🎨', '🚀', '🌈', '🎸', '🌺', '🍕', '🎮', '📱'],
-  },
-
-  {
-    id: 'unicode',
-    name: 'Unicode ',
-    description: '包含基础拉丁字符、数学符号、几何图形等 Unicode 字符',
-    symbols: ['←', '→', '△', '▽', '♠', '♥', '♦', '♣', '✓', '✗', '☀', '☂'],
-  },
-  {
     id: 'icons',
     name: 'Icons',
     description: '强大的矢量图标库，包含品牌图标、实底和轮廓样式等',
@@ -41,68 +28,65 @@ const tabs = [
       { name: 'twitter', type: 'fab' as IconType },
     ] as IconDemo[],
   },
+  {
+    id: 'unicode',
+    name: 'Unicode ',
+    description: '包含基础拉丁字符、数学符号、几何图形等 Unicode 字符',
+    symbols: ['←', '→', '△', '▽', '♠', '♥', '♦', '♣', '✓', '✗', '☀', '☂'],
+  },
+  {
+    id: 'unicode-emoji',
+    name: 'Emoji',
+    description: '完整的 Unicode 表情符号集合，包含表情、人物、自然等分类',
+    emojis: ['😊', '👋', '🌟', '🎉', '🎨', '🚀', '🌈', '🎸', '🌺', '🍕', '🎮', '📱'],
+  },
 ]
 </script>
 
 <template>
-  <div class="welcome">
-    <div class="tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab.id"
-        :class="{ active: activeTab === tab.id }"
-        @click="activeTab = tab.id"
-      >
-        {{ tab.name }}
-      </button>
-    </div>
+  <div class="tabs">
+    <button
+      v-for="tab in tabs"
+      :key="tab.id"
+      :class="{ active: activeTab === tab.id }"
+      @click="activeTab = tab.id"
+    >
+      {{ tab.name }}
+    </button>
+  </div>
 
-    <div v-if="activeTab === 'unicode-emoji'">
-      <WelcomeItem>
-        <template #icon>
-          <EmojiIcon />
-        </template>
-        <template #heading>{{ tabs[0].name }}</template>
-        {{ tabs[0].description }}
-        <div class="demo-icons">
-          <span v-for="emoji in tabs[0].emojis" :key="emoji">{{ emoji }}</span>
-        </div>
-      </WelcomeItem>
-      <router-link to="/emoji" class="view-more">查看更多表情 →</router-link>
-    </div>
-
-    <div v-if="activeTab === 'unicode'">
-      <WelcomeItem>
-        <template #icon>
-          <UnicodeIcon />
-        </template>
-        <template #heading>{{ tabs[1].name }}</template>
-        {{ tabs[1].description }}
-        <div class="demo-icons">
-          <span v-for="symbol in tabs[1].symbols" :key="symbol">{{ symbol }}</span>
-        </div>
-      </WelcomeItem>
-      <router-link to="/unicode" class="view-more">查看更多字符 →</router-link>
-    </div>
-
-    <div v-if="activeTab === 'icons'">
-      <WelcomeItem>
-        <template #icon>
-          <IconsIcon />
-        </template>
-        <template #heading>{{ tabs[2].name }}</template>
-        {{ tabs[2].description }}
-        <div class="demo-icons">
-          <BaseIcon
-            v-for="icon in tabs[2].demo"
-            :key="icon.name"
-            :name="icon.name"
-            :type="icon.type"
-            :size="icon.size || 'lg'"
-          />
-        </div>
-      </WelcomeItem>
+  <div class="tab-content">
+    <div v-if="activeTab === 'icons'" class="content-section">
+      <h2>{{ tabs[0].name }}</h2>
+      <p>{{ tabs[0].description }}</p>
+      <div class="demo-icons">
+        <BaseIcon
+          v-for="icon in tabs[0].demo"
+          :key="icon.name"
+          :name="icon.name"
+          :type="icon.type"
+          size="lg"
+        />
+      </div>
       <router-link to="/icons" class="view-more">查看更多图标 →</router-link>
+    </div>
+
+    <div v-if="activeTab === 'unicode'" class="content-section">
+      <h2>{{ tabs[1].name }}</h2>
+      <p>{{ tabs[1].description }}</p>
+      <div class="demo-symbols">
+        <span v-for="symbol in tabs[1].symbols" :key="symbol">{{ symbol }}</span>
+      </div>
+      <router-link to="/unicode" class="view-more">浏览所有字符 →</router-link>
+    </div>
+
+    <div v-if="activeTab === 'unicode-emoji'" class="content-section">
+      <h2>{{ tabs[2].name }}</h2>
+      <p>{{ tabs[2].description }}</p>
+      <div class="demo-emojis">
+        <span v-for="emoji in tabs[2].emojis" :key="emoji">{{ emoji }}</span>
+      </div>
+      <router-link to="/unicode-emoji" class="view-more">查看所有表情 →</router-link>
     </div>
   </div>
 </template>
